@@ -46,38 +46,47 @@ public class Controller : MonoBehaviour
     {
         if(isPlaying && !isTracking && currentShot < shots.Length)
         {
-            if (Input.GetMouseButton(0))
+            CheckInput();
+        }
+
+        if(isTracking)
+        {
+            TrackInput();
+        }
+    }
+
+    void CheckInput()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Ray tappedLocRay =
+                playerCam.ScreenPointToRay(
+                    new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)
+                    );
+
+            if (Physics.Raycast(tappedLocRay, out RaycastHit hitSomething, Mathf.Infinity, controlPlane))
             {
-                Ray tappedLocRay =
-                    playerCam.ScreenPointToRay(
-                        new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)
-                        );
 
-                if (Physics.Raycast(tappedLocRay, out RaycastHit hitSomething, Mathf.Infinity, controlPlane))
-                {
-					
-                    Vector3 point = hitSomething.point;
-                    point.x += 0.5f;
-					shots[currentShot].GetComponent<Rigidbody>().velocity = Vector3.zero;
-					shots[currentShot].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-					shots[currentShot].transform.position = point;
-                    aimObject.transform.position = point;
-                    shots[currentShot].SetActive(true);
+                Vector3 point = hitSomething.point;
+                point.x += 0.5f;
+                shots[currentShot].GetComponent<Rigidbody>().velocity = Vector3.zero;
+                shots[currentShot].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                shots[currentShot].transform.position = point;
+                aimObject.transform.position = point;
+                shots[currentShot].SetActive(true);
 
-                    isTracking = true;
+                isTracking = true;
 
-                    StartCoroutine(TrackInput());
-                    visAligner.StartTracking();
+                visAligner.StartTracking();
 
-					
-				}
+
             }
         }
     }
 
-    IEnumerator TrackInput()
+    void TrackInput()
     {
-        while (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             Ray tappedLocRay =
                 playerCam.ScreenPointToRay(
@@ -93,13 +102,14 @@ public class Controller : MonoBehaviour
                 
                 aimObject.transform.position = point;
             }
-            yield return new WaitForEndOfFrame();
         }
-
-        KickBall();
-        currentShot++;
-        isTracking = false;
-        yield return null;
+        else
+        {
+            KickBall();
+            currentShot++;
+            isTracking = false;
+        }
+        
     }
 
     void CaughtBall()
