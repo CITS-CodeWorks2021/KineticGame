@@ -37,7 +37,8 @@ public class Controller : MonoBehaviour
         foreach(GameObject g in shots)
 		{
 			g.SetActive(false);
-            g.GetComponent<Rigidbody>().useGravity = false;
+            //g.GetComponent<Rigidbody>().useGravity = false;
+            g.GetComponent<Rigidbody2D>().gravityScale = 0;
 		}
     }
 
@@ -59,18 +60,14 @@ public class Controller : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Ray tappedLocRay =
-                playerCam.ScreenPointToRay(
-                    new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)
-                    );
-
-            if (Physics.Raycast(tappedLocRay, out RaycastHit hitSomething, Mathf.Infinity, controlPlane))
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hit)
             {
-
-                Vector3 point = hitSomething.point;
-                point.x += 0.5f;
-                shots[currentShot].GetComponent<Rigidbody>().velocity = Vector3.zero;
-                shots[currentShot].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                Debug.LogWarning("Clicked: " + hit.transform.position);
+                Vector3 point = hit.point;
+                //point.x += 0.5f;
+                shots[currentShot].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                shots[currentShot].GetComponent<Rigidbody2D>().angularVelocity = 0;
                 shots[currentShot].transform.position = point;
                 aimObject.transform.position = point;
                 shots[currentShot].SetActive(true);
@@ -88,17 +85,14 @@ public class Controller : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Ray tappedLocRay =
-                playerCam.ScreenPointToRay(
-                    new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0)
-                    );
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (Physics.Raycast(tappedLocRay, out RaycastHit hitSomething, Mathf.Infinity, controlPlane))
+            if (hit)
             {
-                Vector3 point = hitSomething.point;
-                point.x += 0.5f;
-				shots[currentShot].GetComponent<Rigidbody>().velocity = Vector3.zero;
-				shots[currentShot].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                Vector3 point = hit.point;
+                //point.x += 0.5f;
+				shots[currentShot].GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+				shots[currentShot].GetComponent<Rigidbody2D>().angularVelocity = 0;
                 
                 aimObject.transform.position = point;
             }
@@ -124,11 +118,11 @@ public class Controller : MonoBehaviour
 
     void KickBall()
     {
-		shots[currentShot].GetComponent<Rigidbody>().useGravity = true;
+		shots[currentShot].GetComponent<Rigidbody2D>().gravityScale = 1;
         visAligner.StopTracking();
         Vector3 pushDir = shots[currentShot].transform.position - aimObject.transform.position;
         pushDir *= pushMulti;
-		shots[currentShot].GetComponent<Rigidbody>().AddForce(pushDir, ForceMode.Impulse);
+		shots[currentShot].GetComponent<Rigidbody2D>().AddForce(pushDir, ForceMode2D.Impulse);
     }
 
     public void EndGame()

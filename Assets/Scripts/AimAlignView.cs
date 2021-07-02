@@ -17,6 +17,7 @@ public class AimAlignView : MonoBehaviour
     {
         if (isTracking)
         {
+            
             aimEndPoint.transform.SetPositionAndRotation(
                 aimObject.transform.position,
                 Quaternion.LookRotation(shot.transform.position - aimObject.transform.position)
@@ -25,7 +26,7 @@ public class AimAlignView : MonoBehaviour
             Vector3 midPoint = Vector3.Lerp(
                 shot.transform.position,
                 aimObject.transform.position,
-                0.57f
+                0.5f
                 );
 
             aimMidPoint.transform.SetPositionAndRotation(
@@ -33,7 +34,7 @@ public class AimAlignView : MonoBehaviour
                 Quaternion.LookRotation(shot.transform.position - midPoint)
                 );
 
-            aimMidPoint.transform.localScale = new Vector3(1, 1, (shot.transform.position - midPoint).magnitude * 2f);
+            aimMidPoint.transform.localScale = new Vector3(1, 1, (shot.transform.position - midPoint).magnitude * 1f);
         }
     }
 

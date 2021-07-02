@@ -18,4 +18,14 @@ public class Catcher : MonoBehaviour
 			OnCatch.Invoke();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (pointValue > 0) ScoreTracker.OnScore.Invoke(pointValue);
+            collision.gameObject.SetActive(false);
+            OnCatch.Invoke();
+        }
+    }
 }

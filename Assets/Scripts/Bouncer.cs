@@ -10,4 +10,9 @@ public class Bouncer : MonoBehaviour
     {
         if(pointValue > 0) ScoreTracker.OnScore.Invoke(pointValue);
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (pointValue > 0) ScoreTracker.OnScore.Invoke(pointValue);
+    }
 }
