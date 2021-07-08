@@ -9,11 +9,13 @@ public class Catcher : MonoBehaviour
 
 	public static UnityEvent OnCatch = new UnityEvent();
 
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
         {
             if(pointValue > 0) ScoreTracker.OnScore.Invoke(pointValue);
+
             other.gameObject.SetActive(false);
 			OnCatch.Invoke();
         }
